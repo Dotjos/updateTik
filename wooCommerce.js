@@ -2,7 +2,6 @@ const consumerKey = 'ck_d09ce8555ee69d3916c97e421c56f17ae46817c5';
 const consumerSecret = 'cs_89808cafba133c1ab50c00c5e087f1cc7218d307';
 const authString = consumerKey + ':' + consumerSecret;
 
-
 // Function to verify bidder
 export async function verifyBidder(bidderNumber, tiktokName) {
     try {

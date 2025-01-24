@@ -1,3 +1,4 @@
+const dotenv=require('dotenv')
 const express = require('express');
 const { WebcastPushConnection } = require('tiktok-live-connector');
 const http = require('http');
@@ -5,7 +6,7 @@ const { Server } = require('socket.io');
 const cors = require('cors'); // Import cors middleware
 const app = express();
 const server = http.createServer(app);
-
+dotenv.config()
 const io = new Server(server,{
     cors: {
         origin: ['http://localhost:3000', 'https://updatetik.onrender.com/'],
@@ -35,8 +36,11 @@ io.on('connection', (socket) => {
     console.log('Client connected');
 });
 
-server.listen(3000, () => {
-    console.log('Server listening on http://localhost:3000');
+
+
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+    console.log(`Server listening on http://localhost:${port}`);
 });
 
 
