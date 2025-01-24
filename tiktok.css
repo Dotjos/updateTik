@@ -1,0 +1,67 @@
+body {
+    margin: 20px 5px 5px 5px;
+    background-color: rgb(255, 255, 255);
+    height: 100vh;}
+
+h1 {
+    text-align: center;
+    font-size:large;
+    font-weight: 600;
+}
+
+.searchSect{
+    display: flex;
+    padding: 3px;
+    justify-content: center;
+    border-radius: 8px;
+    width: 100%; /* Makes it responsive */
+    gap: 30px;
+}
+
+.header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+button {
+    background-color: rgb(223, 218, 218);;
+    cursor: pointer;
+    border: 1.5px solid rgb(90, 89, 89);
+    padding: 10px 20px 10px 20px;
+    border-radius: 7px;
+    font-weight: 500;
+    font-size: medium;
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.verificationInfo{
+    padding: 5px;
+    text-align: center;
+    font-size: medium;
+    
+}
+
+/* Responsive Design for Mobile Screens */
+@media (max-width: 768px) {
+    h1 {
+        font-size: medium; /* Adjust header size for mobile */
+    }
+
+    .verificationInfo{
+        font-size: medium;
+    }
+
+    button{
+        padding: 5px 10px 5px 10px;
+        font-size: medium;
+    }
+
+.header{
+    gap: 15px;
+}
+    
+}
