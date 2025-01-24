@@ -13,10 +13,9 @@ const io = new Server(server,{
     }});
 
     app.use(cors());
-    app.use(express.static('public')); 
-
+    
     app.get('/', (req, res) => {
-        res.send('Welcome to the TikTok Verification App!');
+        res.sendFile(path.join(__dirname, 'index.html'));  // Serve index.html from root
     });
 
 // const tiktokUsername = 'ac_grosshandel';
