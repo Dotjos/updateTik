@@ -1,5 +1,6 @@
 const verifyInfo = document.querySelector(".verificationInfo")
 const loadingText = document.querySelector(".load")
+const clearButton = document.querySelector(".clearBtn") 
 
 const socket = io('http://localhost:3000'); // Adjust to your server's URL if needed
 import {verifyBidder} from "./wooCommerce.js"
@@ -69,3 +70,7 @@ function extractNumber(comment){
      }
 }
                
+clearButton.addEventListener("click", () => {
+    // Clear all data stored in localStorage
+    localStorage.clear();
+});
