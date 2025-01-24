@@ -55,7 +55,6 @@ loadingText.textContent=""
     // displayComment(messageData);
     displayComment(storedMessages)
 
-    console.log("Updated Stored Messages:", storedMessages);
 });
 
 
@@ -64,7 +63,6 @@ function extractNumber(comment){
     let orderNum
     if (numberMatch) {
         orderNum = numberMatch[0];
-        console.log(`Extracted number: ${orderNum}`);
         return orderNum
      } else {
         return 0

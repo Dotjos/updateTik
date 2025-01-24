@@ -25,7 +25,6 @@ export async function verifyBidder(bidderNumber, tiktokName) {
         const order = await response.json(); // Parse the JSON response
         const orderId = order.id; // Correctly get the order ID from the response
         const lineItems = order.line_items || []; // Extract line items from the order
-console.log(order)
         for (const item of lineItems) {
             const metaData = item.meta_data || [];
 
@@ -46,13 +45,11 @@ console.log(order)
 
             // Check if the extracted TikTok username matches
             if (tiktokUsername === tiktokName && parseInt(bidderNumber) === orderId) {
-                console.log(`Valid Bidder: TikTok Username ${tiktokName} matches with Order ${bidderNumber}`);
                 return true; // Valid bidder found, exit the function
             }
         }
 
         // If no valid bidder was found
-        console.log(`Invalid Bidder: TikTok Username ${tiktokName} does not match Order ${bidderNumber}`);
         return false;
 
     } catch (err) {
