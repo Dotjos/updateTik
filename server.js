@@ -14,7 +14,11 @@ const io = new Server(server,{
     }});
 
     app.use(cors());
-    
+
+    // Serve static files from the root directory (if needed, for CSS/JS files)
+    app.use(express.static(path.join(__dirname)));
+
+    // Root route will send the index.html from the root directory
     app.get('/', (req, res) => {
         res.sendFile(path.join(__dirname, 'index.html'));  // Serve index.html from root
     });
