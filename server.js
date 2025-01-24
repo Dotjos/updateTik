@@ -5,6 +5,7 @@ const { Server } = require('socket.io');
 const cors = require('cors'); // Import cors middleware
 const app = express();
 const server = http.createServer(app);
+const path = require('path')
 
 const io = new Server(server,{
     cors: {
