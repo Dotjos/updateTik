@@ -14,7 +14,9 @@ const io = new Server(server,{
 
     app.use(cors());
 
-const tiktokUsername = 'ac_grosshandel';
+// const tiktokUsername = 'ac_grosshandel';
+const tiktokUsername = 'kitty_the_queen';
+
 const tiktokLiveConnection = new WebcastPushConnection(tiktokUsername);
 
 tiktokLiveConnection.connect().then((state) => {
