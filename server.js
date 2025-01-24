@@ -8,7 +8,7 @@ const server = http.createServer(app);
 
 const io = new Server(server,{
     cors: {
-        origin: "*", // Allow all origins (use specific origins in production for security)
+        origin: ['http://localhost:3000', 'https://update-tik.vercel.app/'],
         methods: ["GET", "POST"]
     }});
 
