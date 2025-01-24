@@ -71,6 +71,7 @@ function extractNumber(comment){
 }
                
 clearButton.addEventListener("click", () => {
-    // Clear all data stored in localStorage
-    localStorage.clear();
+    // Remove the 'liveComments' key from localStorage
+    localStorage.removeItem('liveComments');
+    verifyInfo.textContent=""
 });
