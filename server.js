@@ -13,6 +13,11 @@ const io = new Server(server,{
     }});
 
     app.use(cors());
+    app.use(express.static('public')); 
+
+    app.get('/', (req, res) => {
+        res.send('Welcome to the TikTok Verification App!');
+    });
 
 // const tiktokUsername = 'ac_grosshandel';
 const tiktokUsername = 'kitty_the_queen';
