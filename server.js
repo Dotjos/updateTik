@@ -23,7 +23,7 @@ const io = new Server(server,{
         res.sendFile(path.join(__dirname, 'index.html'));  // Serve index.html from root
     });
 
-const tiktokUsername = 'ac_grosshandel';
+const tiktokUsername = 'AC Grosshandel';
 
 const tiktokLiveConnection = new WebcastPushConnection(tiktokUsername);
 
