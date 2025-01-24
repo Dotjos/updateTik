@@ -2,7 +2,7 @@ const verifyInfo = document.querySelector(".verificationInfo")
 const loadingText = document.querySelector(".load")
 const clearButton = document.querySelector(".clearBtn") 
 
-const socket = io('http://localhost:3000'); // Adjust to your server's URL if needed
+const socket = io('https://updatetik.onrender.com'); // Adjust to your server's URL if needed
 import {verifyBidder} from "./wooCommerce.js"
 
 document.addEventListener('DOMContentLoaded', loadStoredComments);
