@@ -60,7 +60,7 @@ export async function verifyBidder(bidderNumber, tiktokName) {
 
     
 export async function getOrders() {
-    const apiUrl = `${storeUrl}/wp-json/wc/v3/orders`; // WooCommerce API endpoint
+    const apiUrl = `${storeUrl}`; // WooCommerce API endpoint
     const url = new URL(apiUrl);
 
     // Adding authentication params to the URL
