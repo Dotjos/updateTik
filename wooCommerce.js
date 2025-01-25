@@ -59,26 +59,70 @@ export async function verifyBidder(bidderNumber, tiktokName) {
 }
 
     
-export async function getOrders() {
+// export async function getOrders() {
+//     const apiUrl = `${storeUrl}`; // WooCommerce API endpoint
+//     const url = new URL(apiUrl);
+
+//     // Adding authentication params to the URL
+//     url.searchParams.append("consumer_key", consumerKey);
+//     url.searchParams.append("consumer_secret", consumerSecret);
+
+//     try {
+//         const response = await fetch(url);
+        
+//         if (!response.ok) {
+//             throw new Error(`Failed to fetch orders: ${response.statusText}`);
+//         }
+
+//         const orders = await response.json();
+//         console.log(orders); // Output the orders (or handle them as needed)
+//         return orders;
+//     } catch (error) {
+//         console.error("Error fetching orders:", error);
+//     }
+// }
+
+export async function getAllOrders(perPage = 100) {
+    let allOrders = [];
+    let currentPage = 1;
+
     const apiUrl = `${storeUrl}`; // WooCommerce API endpoint
     const url = new URL(apiUrl);
 
-    // Adding authentication params to the URL
+    // Append common query parameters
     url.searchParams.append("consumer_key", consumerKey);
     url.searchParams.append("consumer_secret", consumerSecret);
+    url.searchParams.append("per_page", perPage);  // Number of orders per page
 
     try {
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            throw new Error(`Failed to fetch orders: ${response.statusText}`);
+        // Loop to fetch all orders across multiple pages
+        while (true) {
+            url.searchParams.set("page", currentPage);  // Set the current page number
+
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error(`Failed to fetch orders: ${response.statusText}`);
+            }
+
+            const orders = await response.json();
+            allOrders = [...allOrders, ...orders];  // Add the current page's orders to the allOrders array
+
+            // Check if there are more pages (by checking the total number of orders)
+            const totalOrders = parseInt(response.headers.get("X-WP-Total"));
+            const totalPages = Math.ceil(totalOrders / perPage);
+
+            // If there are no more pages, stop fetching
+            if (currentPage >= totalPages) {
+                break;
+            }
+
+            // Otherwise, go to the next page
+            currentPage++;
         }
 
-        const orders = await response.json();
-        console.log(orders); // Output the orders (or handle them as needed)
-        return orders;
+        return allOrders;  // Return all orders after fetching all pages
     } catch (error) {
         console.error("Error fetching orders:", error);
     }
 }
-
