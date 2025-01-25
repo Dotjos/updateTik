@@ -2,7 +2,7 @@ const verifyInfo = document.querySelector(".verificationInfo")
 const loadingText = document.querySelector(".load")
 const clearButton = document.querySelector(".clearBtn") 
 const socket = io('https://updatetik.onrender.com'); // Adjust to your server's URL if needed
-import {verifyBidder} from "./wooCommerce.js"
+import {getOrders, verifyBidder} from "./wooCommerce.js"
 
 document.addEventListener('DOMContentLoaded', loadStoredComments);
 
@@ -12,6 +12,7 @@ function loadStoredComments() {
         index === self.findIndex(m => m.comment === msg.comment && m.username === msg.username)
     );
     uniqueMessages.forEach(displayComment);
+    getOrders()
 }
 
 
