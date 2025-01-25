@@ -1,6 +1,7 @@
 const consumerKey = 'ck_d09ce8555ee69d3916c97e421c56f17ae46817c5';
 const consumerSecret = 'cs_89808cafba133c1ab50c00c5e087f1cc7218d307';
 const authString = consumerKey + ':' + consumerSecret;
+const storeUrl = 'https://tiktoknummer.de/wp-json/wc/v3/orders'; // Replace with your store URL
 
 // Function to verify bidder
 export async function verifyBidder(bidderNumber, tiktokName) {
@@ -9,7 +10,7 @@ export async function verifyBidder(bidderNumber, tiktokName) {
         const authHeader = 'Basic ' + btoa(authString);
 
         // Fetch the order details using bidderNumber (order ID)
-        const response = await fetch(`${'https://tiktoknummer.de/wp-json/wc/v3/orders'}/${bidderNumber}`, {
+        const response = await fetch(`${storeUrl}/${bidderNumber}`, {
             method: 'GET',
             headers: {
                 'Authorization': authHeader
@@ -58,4 +59,26 @@ export async function verifyBidder(bidderNumber, tiktokName) {
 }
 
     
+export async function getOrders() {
+    const apiUrl = `${storeUrl}/wp-json/wc/v3/orders`; // WooCommerce API endpoint
+    const url = new URL(apiUrl);
+
+    // Adding authentication params to the URL
+    url.searchParams.append("consumer_key", consumerKey);
+    url.searchParams.append("consumer_secret", consumerSecret);
+
+    try {
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`Failed to fetch orders: ${response.statusText}`);
+        }
+
+        const orders = await response.json();
+        console.log(orders); // Output the orders (or handle them as needed)
+        return orders;
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+    }
+}
 
