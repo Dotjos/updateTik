@@ -66,7 +66,7 @@ socket.on('chat-message', async (messageData) => {
         return;
     }
 
-    const orderNum = extractNumber(messageData.comment);
+    const orderNum = Number( extractNumber(messageData.comment))
     if (orderNum) {
         try {
             messageData.isVerified = await verifyBidder(orderNum, messageData.username);
@@ -78,7 +78,7 @@ socket.on('chat-message', async (messageData) => {
         messageData.isVerified = false;
     }
 
-    messageData.orderNum = orderNum; // Add orderNum to the message object
+    // messageData.orderNum = orderNum; // Add orderNum to the message object
 
     try {
         const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
