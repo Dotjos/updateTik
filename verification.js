@@ -1,7 +1,6 @@
 const verifyInfo = document.querySelector(".verificationInfo")
 const loadingText = document.querySelector(".load")
 const clearButton = document.querySelector(".clearBtn") 
-
 const socket = io('https://updatetik.onrender.com'); // Adjust to your server's URL if needed
 import {verifyBidder} from "./wooCommerce.js"
 
@@ -43,7 +42,6 @@ loadingText.textContent=""
     const orderNum = extractNumber(messageData.comment);
     if (orderNum) {
         messageData.isVerified = await verifyBidder(orderNum, messageData.username); // Verify and add result
-        console.log(orderNum)
     } else {
         messageData.isVerified = false; // If no order number, mark as not verified
     }
