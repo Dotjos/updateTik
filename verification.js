@@ -67,7 +67,7 @@ function displayComment(messageData) {
 // });
 
 socket.on('chat-message', async (messageData) => {
-    if (loadingText) loadingText.textContent = "";
+    loadingText.textContent = "";
 
     if (!messageData.username || !messageData.comment) {
         console.warn("Malformed message data:", messageData);

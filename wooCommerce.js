@@ -120,7 +120,7 @@ export async function getAllOrders(perPage = 100) {
             // Otherwise, go to the next page
             currentPage++;
         }
-
+         console.log(allOrders)
         return allOrders;  // Return all orders after fetching all pages
     } catch (error) {
         console.error("Error fetching orders:", error);
