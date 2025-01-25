@@ -70,6 +70,7 @@ socket.on('chat-message', async (messageData) => {
 });
 
 
+
 function extractNumber(comment){
     const numberMatch = comment.match(/^\d+/);
     let orderNum
