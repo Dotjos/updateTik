@@ -68,7 +68,7 @@ function extractNumber(comment){
         console.log(orderNum)
         return orderNum
      } else {
-        return null
+        return 0
      }
 }
 
