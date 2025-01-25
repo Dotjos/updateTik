@@ -33,31 +33,6 @@ function displayComment(messageData) {
 
 // Listen for the 'chat-message' event
 
-// socket.on('chat-message', async (messageData) => {
-// loadingText.textContent=""
-//     if (!messageData.username || !messageData.comment) {
-//         console.warn("Malformed message data:", messageData);
-//         return;
-//     }
-//     const orderNum = extractNumber(messageData.comment);
-//     if (orderNum) {
-//         messageData.isVerified = await verifyBidder(orderNum, messageData.username); // Verify and add result
-//     } else {
-//         messageData.isVerified = false; // If no order number, mark as not verified
-//     }
-
-//     // Update localStorage with the verification result
-//     const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
-//     storedMessages.push(messageData);
-//     storedMessages.push(orderNum)
-//     localStorage.setItem('liveComments', JSON.stringify(storedMessages));
-
-//     // Display the updated comment
-//     // displayComment(messageData);
-//     displayComment(storedMessages)
-
-// });
-
 socket.on('chat-message', async (messageData) => {
     if (loadingText) loadingText.textContent = "";
 
@@ -78,7 +53,7 @@ socket.on('chat-message', async (messageData) => {
         messageData.isVerified = false;
     }
 
-    // messageData.orderNum = orderNum; // Add orderNum to the message object
+    messageData.orderNum = orderNum; // Add orderNum to the message object
 
     try {
         const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
@@ -89,7 +64,9 @@ socket.on('chat-message', async (messageData) => {
     }
 
     // Display the updated comment
-    displayComment(messageData); // Display the latest message only
+    if(messageData.orderNum !==0){
+        displayComment(messageData); // Display the latest message only
+    }
 });
 
 
