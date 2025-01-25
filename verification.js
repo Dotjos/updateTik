@@ -42,6 +42,7 @@ loadingText.textContent=""
     const orderNum = extractNumber(messageData.comment);
     if (orderNum) {
         messageData.isVerified = await verifyBidder(orderNum, messageData.username); // Verify and add result
+        console.log(orderNum)
     } else {
         messageData.isVerified = false; // If no order number, mark as not verified
     }
@@ -49,6 +50,7 @@ loadingText.textContent=""
     // Update localStorage with the verification result
     const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
     storedMessages.push(messageData);
+    storedMessages.push(orderNum)
     localStorage.setItem('liveComments', JSON.stringify(storedMessages));
 
     // Display the updated comment
@@ -66,7 +68,7 @@ function extractNumber(comment){
         console.log(orderNum)
         return orderNum
      } else {
-        return 0
+        return null
      }
 }
 
