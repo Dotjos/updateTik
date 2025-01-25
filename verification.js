@@ -81,16 +81,6 @@ function extractNumber(comment){
      }
 }
 
-// function extractNumber(comment) {
-//     const numberMatch = comment.match(/^\d+|(?<=\s)\d+(?![\w\d])/);
-//     let orderNum;
-//     if (numberMatch) {
-//         orderNum = numberMatch[0];
-//         return orderNum;
-//     } else {
-//         return 0;
-//     }
-// }
                
 clearButton.addEventListener("click", () => {
     // Remove the 'liveComments' key from localStorage
