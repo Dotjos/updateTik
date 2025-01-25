@@ -33,29 +33,63 @@ function displayComment(messageData) {
 
 // Listen for the 'chat-message' event
 
+// socket.on('chat-message', async (messageData) => {
+// loadingText.textContent=""
+//     if (!messageData.username || !messageData.comment) {
+//         console.warn("Malformed message data:", messageData);
+//         return;
+//     }
+//     const orderNum = extractNumber(messageData.comment);
+//     if (orderNum) {
+//         messageData.isVerified = await verifyBidder(orderNum, messageData.username); // Verify and add result
+//     } else {
+//         messageData.isVerified = false; // If no order number, mark as not verified
+//     }
+
+//     // Update localStorage with the verification result
+//     const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
+//     storedMessages.push(messageData);
+//     storedMessages.push(orderNum)
+//     localStorage.setItem('liveComments', JSON.stringify(storedMessages));
+
+//     // Display the updated comment
+//     // displayComment(messageData);
+//     displayComment(storedMessages)
+
+// });
+
 socket.on('chat-message', async (messageData) => {
-loadingText.textContent=""
+    if (loadingText) loadingText.textContent = "";
+
     if (!messageData.username || !messageData.comment) {
         console.warn("Malformed message data:", messageData);
         return;
     }
+
     const orderNum = extractNumber(messageData.comment);
     if (orderNum) {
-        messageData.isVerified = await verifyBidder(orderNum, messageData.username); // Verify and add result
+        try {
+            messageData.isVerified = await verifyBidder(orderNum, messageData.username);
+        } catch (error) {
+            console.error("Error verifying bidder:", error);
+            messageData.isVerified = false; // Default to not verified on error
+        }
     } else {
-        messageData.isVerified = false; // If no order number, mark as not verified
+        messageData.isVerified = false;
     }
 
-    // Update localStorage with the verification result
-    const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
-    storedMessages.push(messageData);
-    storedMessages.push(orderNum)
-    localStorage.setItem('liveComments', JSON.stringify(storedMessages));
+    messageData.orderNum = orderNum; // Add orderNum to the message object
+
+    try {
+        const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
+        storedMessages.push(messageData); // Add the message object to the stored array
+        localStorage.setItem('liveComments', JSON.stringify(storedMessages));
+    } catch (error) {
+        console.error("Error updating localStorage:", error);
+    }
 
     // Display the updated comment
-    // displayComment(messageData);
-    displayComment(storedMessages)
-
+    displayComment(messageData); // Display the latest message only
 });
 
 
