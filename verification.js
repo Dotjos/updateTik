@@ -26,7 +26,6 @@ function displayComment(messageData) {
     commentDiv.style.color = messageData.isVerified ? "green" : "red";
     commentDiv.innerHTML = `
         <p><strong>${messageData.username}</strong>: ${messageData.comment}</p>
-        <p>Status: <strong>${messageData.isVerified ? "Verified ✅" : "Not Verified ❌"}</strong></p>
     `;
     verifyInfo.appendChild(commentDiv);
 }
@@ -68,8 +67,6 @@ socket.on('chat-message', async (messageData) => {
         displayComment(messageData); // Display the latest message only
     }
 });
-
-
 
 function extractNumber(comment){
     const numberMatch = comment.match(/^\d+/);
