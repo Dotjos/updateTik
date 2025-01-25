@@ -31,7 +31,6 @@ function displayComment(messageData) {
     verifyInfo.appendChild(commentDiv);
 }
 
-
 // Listen for the 'chat-message' event
 
 socket.on('chat-message', async (messageData) => {
@@ -59,16 +58,28 @@ loadingText.textContent=""
 });
 
 
-function extractNumber(comment){
-    const numberMatch = comment.match(/\d+/);
-    let orderNum
+// function extractNumber(comment){
+//     const numberMatch = comment.match(/\d+/);
+//     let orderNum
+//     if (numberMatch) {
+//         orderNum = numberMatch[0];
+//         return orderNum
+//      } else {
+//         return 0
+//      }
+// }
+
+function extractNumber(comment) {
+    const numberMatch = comment.match(/^\d+|(?<=\s)\d+(?![\w\d])/);
+    let orderNum;
     if (numberMatch) {
         orderNum = numberMatch[0];
-        return orderNum
-     } else {
-        return 0
-     }
+        return orderNum;
+    } else {
+        return 0;
+    }
 }
+
                
 clearButton.addEventListener("click", () => {
     // Remove the 'liveComments' key from localStorage
