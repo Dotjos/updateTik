@@ -58,29 +58,6 @@ export async function verifyBidder(bidderNumber, tiktokName) {
     }
 }
 
-    
-// export async function getOrders() {
-//     const apiUrl = `${storeUrl}`; // WooCommerce API endpoint
-//     const url = new URL(apiUrl);
-
-//     // Adding authentication params to the URL
-//     url.searchParams.append("consumer_key", consumerKey);
-//     url.searchParams.append("consumer_secret", consumerSecret);
-
-//     try {
-//         const response = await fetch(url);
-        
-//         if (!response.ok) {
-//             throw new Error(`Failed to fetch orders: ${response.statusText}`);
-//         }
-
-//         const orders = await response.json();
-//         console.log(orders); // Output the orders (or handle them as needed)
-//         return orders;
-//     } catch (error) {
-//         console.error("Error fetching orders:", error);
-//     }
-// }
 
 export async function getAllOrders(perPage = 100) {
     let allOrders = [];
@@ -120,7 +97,6 @@ export async function getAllOrders(perPage = 100) {
             // Otherwise, go to the next page
             currentPage++;
         }
-         console.log(allOrders)
         return allOrders;  // Return all orders after fetching all pages
     } catch (error) {
         console.error("Error fetching orders:", error);
