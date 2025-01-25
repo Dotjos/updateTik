@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', loadStoredComments);
 
 function loadStoredComments() {
     const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
-    storedMessages.forEach(displayComment); // Display each comment
+    const uniqueMessages = [...new Set(storedMessages)]; // Remove duplicates
+    uniqueMessages.forEach(displayComment); 
 }
 
 // Function to display a comment dynamically on the page
@@ -65,7 +66,6 @@ function extractNumber(comment){
     let orderNum
     if (numberMatch) {
         orderNum = numberMatch[0];
-        console.log(orderNum)
         return orderNum
      } else {
         return 0
