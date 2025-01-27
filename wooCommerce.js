@@ -58,7 +58,6 @@ export async function verifyBidder(bidderNumber, tiktokName) {
     }
 }
 
-
 export async function getAllOrders(perPage = 100) {
     let allOrders = [];
     let currentPage = 1;

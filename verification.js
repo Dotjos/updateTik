@@ -1,7 +1,7 @@
 const verifyInfo = document.querySelector(".verificationInfo");
 const loadingText = document.querySelector(".load");
 const clearButton = document.querySelector(".clearBtn");
-const socket = io('https://updatetik.onrender.com'); // Adjust to your server's URL if needed
+const socket = io('https://tiktoknummer.de'); // Adjust to your server
 import { getAllOrders, verifyBidder } from "./wooCommerce.js";
 
 document.addEventListener('DOMContentLoaded', loadStoredComments);
@@ -11,12 +11,9 @@ async function loadStoredComments() {
     const uniqueMessages = Array.from(
         new Map(storedMessages.map(msg => [`${msg.username}|${msg.comment}`, msg])).values()
     );
-    // uniqueMessages.forEach(displayComment);
-    
+    // uniqueMessages.forEach(displayComment);    
     let orders=[]
-
     //initial order fetching
-
     try {
          orders = await getAllOrders(); // Get orders asynchronously
     } catch (error) {
@@ -51,8 +48,9 @@ function displayComment(messageData) {
     commentDiv.style.color = messageData.isVerified || messageData.isTiktokUsernamePresent ? "green" : "red";
 
     commentDiv.innerHTML = `
-        <p><strong>${messageData.username}</strong>: ${messageData.comment}</p>
-    `;
+    ${messageData.isVerified ? `<span>${messageData.orderNum}</span>` : ""} <span><strong>${messageData.username}</strong>: ${messageData.comment}</span>
+`;
+
     verifyInfo.appendChild(commentDiv);
 }
 
@@ -77,9 +75,7 @@ async function handleMessageData(messageData, ordersArray) {
             console.error(`Error verifying bidder (OrderNum: ${orderNum}, Username: ${messageData.username}):`, error);
             messageData.isVerified = false;
         }
-    } else {
-        messageData.isVerified = false;
-    }
+    } 
 
     try {
         const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
@@ -90,7 +86,6 @@ async function handleMessageData(messageData, ordersArray) {
     } catch (error) {
         console.error("Error updating localStorage:", error);
     }
-    
     // Check for TikTok username in orders
     try {
         messageData.isTiktokUsernamePresent = await checkTiktokUsernameInOrders(messageData, ordersArray);
