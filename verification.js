@@ -3,7 +3,7 @@ const loadingText = document.querySelector(".load");
 const clearButton = document.querySelector(".clearBtn");
 
 // const link= io('https://tiktoknummer.de'|| "https://updatetik.onrender.com/"); // Adjust to your server
-const link = io(location.hostname === "tiktoknummer.de" ? "https://tiktoknummer.de" : "https://updatetik.onrender.com/");
+const socket = io(location.hostname === "tiktoknummer.de" ? "https://tiktoknummer.de" : "https://updatetik.onrender.com/");
 
 // const socket = io('https://tiktoknummer.de'); // Adjust to your server
 import { getAllOrders, verifyBidder } from "./wooCommerce.js";
