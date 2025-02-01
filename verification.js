@@ -1,8 +1,30 @@
 const verifyInfo = document.querySelector(".verificationInfo");
 const loadingText = document.querySelector(".load");
 const clearButton = document.querySelector(".clearBtn");
-const socket = io('https://updatetik.onrender.com/'); // Adjust to your server
 import { getAllOrders, verifyBidder } from "./wooCommerce.js";
+const socket = io('https://updatetik.onrender.com/'); // Adjust to your server
+
+// let socket;
+
+// function connectSocket(primaryUrl, fallbackUrl, options) {
+//     socket = io(primaryUrl, options);
+
+//     socket.on("connect_error", () => {
+//         console.warn(`Failed to connect to ${primaryUrl}, trying fallback...`);
+//         socket = io(fallbackUrl, options); // Try the fallback server
+//     });
+
+//     return socket;
+// }
+
+// const options = {
+//     path: '/biddernumbercheck/socket.io/', // Adjust path if needed
+//     transports: ['websocket', 'polling']
+// };
+
+// // Try connecting to primary first, then fallback if needed
+// socket = connectSocket('https://tiktoknummer.de', 'https://updatetik.onrender.com/', options);
+
 
 document.addEventListener('DOMContentLoaded', loadStoredComments);
     
