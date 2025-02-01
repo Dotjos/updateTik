@@ -39,6 +39,7 @@ tiktokLiveConnection.on('chat', (data) => {
         username: data.uniqueId,
         comment: data.comment
     };
+    console.log(messageData)
     io.emit('chat-message', messageData); // Send message to all connected clients
 });
 
