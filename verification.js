@@ -4,27 +4,6 @@ const clearButton = document.querySelector(".clearBtn");
 import { getAllOrders, verifyBidder } from "./wooCommerce.js";
 const socket = io('https://updatetik.onrender.com/'); // Adjust to your server
 
-// let socket;
-
-// function connectSocket(primaryUrl, fallbackUrl, options) {
-//     socket = io(primaryUrl, options);
-
-//     socket.on("connect_error", () => {
-//         console.warn(`Failed to connect to ${primaryUrl}, trying fallback...`);
-//         socket = io(fallbackUrl, options); // Try the fallback server
-//     });
-
-//     return socket;
-// }
-
-// const options = {
-//     path: '/biddernumbercheck/socket.io/', // Adjust path if needed
-//     transports: ['websocket', 'polling']
-// };
-
-// // Try connecting to primary first, then fallback if needed
-// socket = connectSocket('https://tiktoknummer.de', 'https://updatetik.onrender.com/', options);
-
 
 document.addEventListener('DOMContentLoaded', loadStoredComments);
     
@@ -74,6 +53,8 @@ function displayComment(messageData) {
 `;
 
     verifyInfo.appendChild(commentDiv);
+    console.log("Comment added:", commentDiv.innerHTML); // Debugging
+
 }
 
 // Handle chat-message and check TikTok username
@@ -114,8 +95,8 @@ async function handleMessageData(messageData, ordersArray) {
     } catch (error) {
         console.error("Error checking TikTok username in orders:", error);
     }
-
     displayComment(messageData);
+    console.log(messageData)
 }
 
 // Function to extract the order number from a comment
