@@ -45,17 +45,23 @@ function displayComment(messageData) {
     const commentDiv = document.createElement("div");
     commentDiv.classList.add("comment");
 
+     // ✅ Ensure case-insensitive username comparison
+     const username = messageData.username.toLowerCase();
+
     // You may want to call checkTiktokUsernameInOrders(messageData, orders) here after orders are fetched
     commentDiv.style.color = messageData.isVerified || messageData.isTiktokUsernamePresent ? "green" : "red";
 
     commentDiv.innerHTML = `
-    ${messageData.isVerified ? `<span>${messageData.orderNum}</span>` : ""} <span><strong>${messageData.username}</strong>: ${messageData.comment}</span>
+    ${messageData.isVerified ? `<span>${messageData.orderNum}</span>` : ""} <span><strong>${username}</strong>: ${messageData.comment}</span>
 `;
 
     verifyInfo.appendChild(commentDiv);
 
-    verifyInfo.scrollTo({ top: verifyInfo.scrollHeight, behavior: "smooth" });
+    setTimeout(() => {
+        verifyInfo.scrollTo({ top: verifyInfo.scrollHeight, behavior: "smooth" });
+    }, 200);
 
+    // verifyInfo.scrollTo({ top: verifyInfo.scrollHeight, behavior: "smooth" });
 }
 
 // Handle chat-message and check TikTok username
