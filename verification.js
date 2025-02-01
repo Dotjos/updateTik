@@ -12,7 +12,7 @@ async function loadStoredComments() {
     const uniqueMessages = Array.from(
         new Map(storedMessages.map(msg => [`${msg.username}|${msg.comment}`, msg])).values()
     );
-    // uniqueMessages.forEach(displayComment);    
+    uniqueMessages.forEach(displayComment);    
     let orders=[]
     //initial order fetching
     try {
