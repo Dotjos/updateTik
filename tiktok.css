@@ -42,7 +42,7 @@ button {
     padding: 5px;
     text-align: center;
     font-size: medium;
-    max-height: 400px;  /* or use a relative unit like 50vh */
+    max-height: 100vh;  /* or use a relative unit like 50vh */
     overflow-y: auto;
 }
 
@@ -54,7 +54,7 @@ button {
 
     .verificationInfo{
         font-size: medium;
-        max-height: 300px;  /* or use a relative unit like 50vh */
+        max-height: 100vh;  /* or use a relative unit like 50vh */
         overflow-y: auto;
     }
 
