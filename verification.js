@@ -59,6 +59,47 @@ function displayComment(messageData) {
 }
 
 // Handle chat-message and check TikTok username
+// async function handleMessageData(messageData, ordersArray) {
+//     loadingText.textContent = "";
+
+//     if (!messageData.username || !messageData.comment) {
+//         console.warn("Malformed message data:", messageData);
+//         return;
+//     }
+
+//     const orderNum = Number(extractNumber(messageData.comment));
+//     messageData.orderNum = orderNum;
+//     messageData.isVerified = false;
+//     messageData.isTiktokUsernamePresent = false;
+
+//     if (orderNum && orderNum > 0) {
+//         try {
+//             messageData.isVerified = await verifyBidder(orderNum, messageData.username);
+//         } catch (error) {
+//             console.error(`Error verifying bidder (OrderNum: ${orderNum}, Username: ${messageData.username}):`, error);
+//             messageData.isVerified = false;
+//         }
+//     } 
+
+//     try {
+//         const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
+//         if (!storedMessages.some(msg => msg.comment === messageData.comment && msg.username === messageData.username)) {
+//             storedMessages.push(messageData);
+//             localStorage.setItem('liveComments', JSON.stringify(storedMessages));
+//         }
+//     } catch (error) {
+//         console.error("Error updating localStorage:", error);
+//     }
+//     // Check for TikTok username in orders
+//     try {
+//         messageData.isTiktokUsernamePresent = await checkTiktokUsernameInOrders(messageData, ordersArray);
+//     } catch (error) {
+//         console.error("Error checking TikTok username in orders:", error);
+//     }
+//     displayComment(messageData);
+//     console.log(messageData)
+// }
+
 async function handleMessageData(messageData, ordersArray) {
     loadingText.textContent = "";
 
@@ -67,6 +108,7 @@ async function handleMessageData(messageData, ordersArray) {
         return;
     }
 
+    messageData.username = messageData.username.toLowerCase();  // ✅ Convert username to lowercase
     const orderNum = Number(extractNumber(messageData.comment));
     messageData.orderNum = orderNum;
     messageData.isVerified = false;
@@ -79,26 +121,30 @@ async function handleMessageData(messageData, ordersArray) {
             console.error(`Error verifying bidder (OrderNum: ${orderNum}, Username: ${messageData.username}):`, error);
             messageData.isVerified = false;
         }
-    } 
+    }
 
+    // ✅ Append new messages to `localStorage` before displaying
     try {
-        const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
-        if (!storedMessages.some(msg => msg.comment === messageData.comment && msg.username === messageData.username)) {
+        const storedMessages = JSON.parse(localStorage.getItem("liveComments")) || [];
+        const messageKey = `${messageData.username.toLowerCase()}|${messageData.comment}`;
+
+        if (!storedMessages.some(msg => `${msg.username.toLowerCase()}|${msg.comment}` === messageKey)) {
             storedMessages.push(messageData);
-            localStorage.setItem('liveComments', JSON.stringify(storedMessages));
+            localStorage.setItem("liveComments", JSON.stringify(storedMessages));
         }
     } catch (error) {
         console.error("Error updating localStorage:", error);
     }
-    // Check for TikTok username in orders
+
     try {
         messageData.isTiktokUsernamePresent = await checkTiktokUsernameInOrders(messageData, ordersArray);
     } catch (error) {
         console.error("Error checking TikTok username in orders:", error);
     }
+
     displayComment(messageData);
-    console.log(messageData)
 }
+
 
 // Function to extract the order number from a comment
 function extractNumber(comment) {
@@ -138,7 +184,7 @@ async function checkTiktokUsernameInOrders(messageData, ordersArray) {
             }
 
             // If the TikTok username matches, return true
-            if (tiktokUsername && tiktokUsername === messageData.username) {
+            if (tiktokUsername && tiktokUsername.toLowerCase() === messageData.username.toLowerCase()) {
                 return true;
             }
         }
