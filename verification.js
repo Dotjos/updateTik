@@ -53,7 +53,8 @@ function displayComment(messageData) {
 `;
 
     verifyInfo.appendChild(commentDiv);
-    console.log("Comment added:", commentDiv.innerHTML); // Debugging
+
+    verifyInfo.scrollTo({ top: verifyInfo.scrollHeight, behavior: "smooth" });
 
 }
 
