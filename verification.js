@@ -4,7 +4,6 @@ const clearButton = document.querySelector(".clearBtn");
 import { getAllOrders, verifyBidder } from "./wooCommerce.js";
 const socket = io('https://updatetik.onrender.com/'); // Adjust to your server
 
-
 document.addEventListener('DOMContentLoaded', loadStoredComments);
 
 
@@ -76,67 +75,9 @@ function displayComment(messageData) {
 
     // ✅ Ensure smooth scrolling when a new comment is added
     setTimeout(() => {
-        verifyInfo.scrollTo({ top: verifyInfo.scrollHeight, behavior: "smooth" });
+        verifyInfo.scrollTop = infoDiv.scrollHeight;
     }, 200);
 }
-
-    
-// async function loadStoredComments() {
-//     const storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
-//     const uniqueMessages = Array.from(
-//         new Map(storedMessages.map(msg => [`${msg.username}|${msg.comment}`, msg])).values()
-//     );
-//     uniqueMessages.forEach(displayComment);    
-//     let orders=[]
-//     //initial order fetching
-//     try {
-//          orders = await getAllOrders(); // Get orders asynchronously
-//     } catch (error) {
-//         console.error("Error fetching orders:", error);
-//     }
-
-//     // reload of the orders data every 60secs in case of addition to orders while in session
-
-//     setInterval(async () => {
-//         try {
-//             orders = await getAllOrders();
-//         } catch (error) {
-//             console.error("Error updating orders:", error);
-//         }
-//     }, 60000); 
-
-//     socket.on('chat-message', async (messageData) => {
-//         try {
-//             await handleMessageData(messageData, orders);
-//         } catch (error) {
-//             console.error("Error handling message data:", error);
-//         }
-//     });
-// }
-
-// // Function to display a comment dynamically on the page
-// function displayComment(messageData) {
-//     const commentDiv = document.createElement("div");
-//     commentDiv.classList.add("comment");
-
-//      // ✅ Ensure case-insensitive username comparison
-//      const username = messageData.username.toLowerCase();
-
-//     // You may want to call checkTiktokUsernameInOrders(messageData, orders) here after orders are fetched
-//     commentDiv.style.color = messageData.isVerified || messageData.isTiktokUsernamePresent ? "green" : "red";
-
-//     commentDiv.innerHTML = `
-//     ${messageData.isVerified ? `<span>${messageData.orderNum}</span>` : ""} <span><strong>${username}</strong>: ${messageData.comment}</span>
-// `;
-
-//     verifyInfo.appendChild(commentDiv);
-
-//     setTimeout(() => {
-//         verifyInfo.scrollTo({ top: verifyInfo.scrollHeight, behavior: "smooth" });
-//     }, 200);
-
-//     // verifyInfo.scrollTo({ top: verifyInfo.scrollHeight, behavior: "smooth" });
-// }
 
 async function handleMessageData(messageData, ordersArray) {
     loadingText.textContent = "";
@@ -182,9 +123,7 @@ async function handleMessageData(messageData, ordersArray) {
 
     displayComment(messageData);
 }
-
 // Function to extract the order number from a comment
-
 
 function extractNumber(comment) {
     const numberMatch = comment.match(/^\d+/);

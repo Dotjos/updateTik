@@ -9,7 +9,7 @@ const path = require('path')
 
 const io = new Server(server,{
     cors: {
-        origin: ['http://localhost:3000', 'https://updatetik.onrender.com/',"https://tiktoknummer.de"],
+        origin: ['http://localhost:3000', 'https://updatetik.onrender.com/'],
         methods: ["GET", "POST"]
     }});
 
