@@ -44,7 +44,7 @@ export async function verifyBidder(bidderNumber, tiktokName) {
             }
 
             // Check if the extracted TikTok username matches
-            if (tiktokUsername === tiktokName && parseInt(bidderNumber) === orderId) {
+            if (tiktokUsername.toLowerCase() === tiktokName.toLowerCase() && parseInt(bidderNumber) === orderId) {
                 return true; // Valid bidder found, exit the function
             }
         }

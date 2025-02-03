@@ -6,7 +6,6 @@ const socket = io('https://updatetik.onrender.com/'); // Adjust to your server
 
 document.addEventListener('DOMContentLoaded', loadStoredComments);
 
-
 async function loadStoredComments() {
     let storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
 
