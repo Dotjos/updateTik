@@ -9,7 +9,7 @@ const path = require('path')
 
 const io = new Server(server,{
     cors: {
-        origin: ['http://localhost:3000', 'https://updatetik.onrender.com/'],
+        origin: ['http://localhost:3000', 'https://updatetik.onrender.com'],
         methods: ["GET", "POST"]
     }});
 
@@ -46,7 +46,6 @@ tiktokLiveConnection.on('chat', (data) => {
 io.on('connection', (socket) => {
     console.log('Client connected');
 });
-
 
 
 const port = process.env.PORT || 3000;
