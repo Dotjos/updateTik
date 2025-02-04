@@ -74,7 +74,7 @@ function displayComment(messageData) {
 
     // ✅ Ensure smooth scrolling when a new comment is added
     setTimeout(() => {
-        verifyInfo.scrollTop = infoDiv.scrollHeight;
+        verifyInfo.scrollTop = verifyInfo.scrollHeight;
     }, 200);
 }
 
