@@ -9,10 +9,11 @@ document.addEventListener('DOMContentLoaded', loadStoredComments);
 async function loadStoredComments() {
     let storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
 
-    // ✅ Convert usernames to lowercase for case-insensitive uniqueness
+    // ✅ Convert usernames && nicknames to lowercase for case-insensitive uniqueness
     storedMessages = storedMessages.map(msg => ({
         ...msg,
-        username: msg.username.toLowerCase()
+        username: msg.username.toLowerCase(),
+        nickname:msg.username.toLowerCase()
     }));
 
     // ✅ Ensure unique messages are preserved
@@ -46,6 +47,7 @@ async function loadStoredComments() {
         try {
             // Convert username to lowercase for consistency
             messageData.username = messageData.username.toLowerCase();
+            messageData.nickname = messageData.nickname.toLowerCase()
 
             await handleMessageData(messageData, orders);
         } catch (error) {
@@ -67,7 +69,7 @@ function displayComment(messageData) {
 
     commentDiv.innerHTML = `
         ${messageData.isVerified ? `<span>${messageData.orderNum}</span>` : ""} 
-        <span><strong>${username}</strong>: ${messageData.comment}</span>
+        <span><strong>${username}</strong>:<strong>${messageData.comment}<strong>:${messageData.comment}</span>
     `;
 
     verifyInfo.appendChild(commentDiv);
@@ -78,6 +80,53 @@ function displayComment(messageData) {
     }, 200);
 }
 
+// async function handleMessageData(messageData, ordersArray) {
+//     loadingText.textContent = "";
+
+//     if (!messageData.username || !messageData.comment) {
+//         console.warn("Malformed message data:", messageData);
+//         return;
+//     }
+
+//     messageData.username = messageData.username.toLowerCase();  // ✅ Convert username to lowercase
+//     messageData.nickname = messageData.nickname.toLowerCase();  // ✅ Convert nickname to lowercase
+//     const orderNum = Number(extractNumber(messageData.comment));
+//     messageData.orderNum = orderNum;
+//     messageData.isVerified = false;
+//     messageData.isTiktokUsernamePresent = false;
+
+//     if (orderNum && orderNum > 0) {
+//         try {
+//             messageData.isVerified = await verifyBidder(orderNum, messageData.username,messageData.nickname);
+//         } catch (error) {
+//             console.error(`Error verifying bidder (OrderNum: ${orderNum}, Username: ${messageData.username}):`, error);
+//             messageData.isVerified = false;
+//         }
+//     }
+
+//     // ✅ Append new messages to `localStorage` before displaying
+//     try {
+//         const storedMessages = JSON.parse(localStorage.getItem("liveComments")) || [];
+//         const messageKey = `${messageData.username.toLowerCase()}|${messageData.comment}`;
+
+//         if (!storedMessages.some(msg => `${msg.username.toLowerCase()}|${msg.comment}` === messageKey)) {
+//             storedMessages.push(messageData);
+//             localStorage.setItem("liveComments", JSON.stringify(storedMessages));
+//         }
+//     } catch (error) {
+//         console.error("Error updating localStorage:", error);
+//     }
+
+//     try {
+//         messageData.isTiktokUsernamePresent = await checkTiktokUsernameInOrders(messageData, ordersArray);
+//     } catch (error) {
+//         console.error("Error checking TikTok username in orders:", error);
+//     }
+
+//     displayComment(messageData);
+// }
+// Function to extract the order number from a comment
+
 async function handleMessageData(messageData, ordersArray) {
     loadingText.textContent = "";
 
@@ -86,7 +135,8 @@ async function handleMessageData(messageData, ordersArray) {
         return;
     }
 
-    messageData.username = messageData.username.toLowerCase();  // ✅ Convert username to lowercase
+    messageData.username = (messageData.username?.toString() || "").toLowerCase();   // ✅ Convert username to lowercase
+    messageData.nickname = (messageData.nickname?.toString() || "").toLowerCase();   // ✅ Convert nickname to lowercase
     const orderNum = Number(extractNumber(messageData.comment));
     messageData.orderNum = orderNum;
     messageData.isVerified = false;
@@ -94,11 +144,17 @@ async function handleMessageData(messageData, ordersArray) {
 
     if (orderNum && orderNum > 0) {
         try {
-            messageData.isVerified = await verifyBidder(orderNum, messageData.username);
+            messageData.isVerified = await verifyBidder(orderNum, messageData.username,messageData.nickname);
         } catch (error) {
             console.error(`Error verifying bidder (OrderNum: ${orderNum}, Username: ${messageData.username}):`, error);
             messageData.isVerified = false;
         }
+    }
+
+    try {
+        messageData.isTiktokUsernamePresent = await checkTiktokUsernameInOrders(messageData, ordersArray);
+    } catch (error) {
+        console.error("Error checking TikTok username in orders:", error);
     }
 
     // ✅ Append new messages to `localStorage` before displaying
@@ -114,15 +170,9 @@ async function handleMessageData(messageData, ordersArray) {
         console.error("Error updating localStorage:", error);
     }
 
-    try {
-        messageData.isTiktokUsernamePresent = await checkTiktokUsernameInOrders(messageData, ordersArray);
-    } catch (error) {
-        console.error("Error checking TikTok username in orders:", error);
-    }
 
     displayComment(messageData);
 }
-// Function to extract the order number from a comment
 
 function extractNumber(comment) {
     const numberMatch = comment.match(/^\d+/);
@@ -160,10 +210,15 @@ async function checkTiktokUsernameInOrders(messageData, ordersArray) {
                 }
             }
 
-            // If the TikTok username matches, return true
-            if (tiktokUsername && tiktokUsername.toLowerCase() === messageData.username.toLowerCase()) {
+
+            if (
+                (tiktokUsername?.toString().toLowerCase() || "") === (messageData.username?.toString().toLowerCase() || "") ||
+                (tiktokUsername?.toString().toLowerCase() || "") === (messageData.nickname?.toString().toLowerCase() || "")
+            ) {
                 return true;
             }
+            
+            
         }
 
         // If no match found for this order, continue to the next order

@@ -37,7 +37,8 @@ tiktokLiveConnection.connect().then((state) => {
 tiktokLiveConnection.on('chat', (data) => {
     const messageData = {
         username: data.uniqueId,
-        comment: data.comment
+        comment: data.comment,
+        nickname:data.nickname
     };
     console.log(messageData)
     io.emit('chat-message', messageData); // Send message to all connected clients
@@ -46,7 +47,6 @@ tiktokLiveConnection.on('chat', (data) => {
 io.on('connection', (socket) => {
     console.log('Client connected');
 });
-
 
 const port = process.env.PORT || 3000;
 server.listen(port, () => {

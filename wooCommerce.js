@@ -4,7 +4,7 @@ const authString = consumerKey + ':' + consumerSecret;
 const storeUrl = 'https://tiktoknummer.de/wp-json/wc/v3/orders' // Replace with your store URL
 
 // Function to verify bidder
-export async function verifyBidder(bidderNumber, tiktokName) {
+export async function verifyBidder(bidderNumber, tiktokName,nickname) {
     try {
         // Construct the Basic Auth header
         const authHeader = 'Basic ' + btoa(authString);
@@ -44,8 +44,10 @@ export async function verifyBidder(bidderNumber, tiktokName) {
             }
 
             // Check if the extracted TikTok username matches
-            if (tiktokUsername.toLowerCase() === tiktokName.toLowerCase() && parseInt(bidderNumber) === orderId) {
-                return true; // Valid bidder found, exit the function
+            if (tiktokUsername && 
+                (tiktokUsername.toLowerCase() === tiktokName.toLowerCase() || 
+                (nickname.toLowerCase() === tiktokUsername.toLowerCase() && parseInt(bidderNumber) === orderId))) {
+                return true; 
             }
         }
 
