@@ -14,7 +14,7 @@ async function loadStoredComments() {
     storedMessages = storedMessages.map(msg => ({
         ...msg,
         username: msg.username.toLowerCase(),
-        nickname:msg.username.toLowerCase()
+        nickname:msg.nickname.toLowerCase()
     }));
 
     // ✅ Ensure unique messages are preserved
@@ -43,6 +43,8 @@ async function loadStoredComments() {
         }
     }, 60000); 
 
+    socket.off('chat-message');
+
     // ✅ Listen for new messages
     socket.on('chat-message', async (messageData) => {
         try {
@@ -50,6 +52,7 @@ async function loadStoredComments() {
             messageData.username = messageData.username.toLowerCase();
             messageData.nickname = messageData.nickname.toLowerCase()
 
+            console.log("📥 Received chat message from WebSocket:", messageData);
             await handleMessageData(messageData, orders);
         } catch (error) {
             console.error("Error handling message data:", error);
@@ -70,7 +73,7 @@ function displayComment(messageData) {
 
     commentDiv.innerHTML = `
         ${messageData.isVerified ? `<span>${messageData.orderNum}</span>` : ""} 
-        <span><strong>${username}</strong>:<strong>${messageData.comment}<strong>:${messageData.comment}</span>
+        <span><strong>${username}</strong>:<strong>${messageData.nickname}<strong>:${messageData.comment}</span>
     `;
 
 
