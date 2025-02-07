@@ -5,7 +5,6 @@ import { getAllOrders, verifyBidder } from "./wooCommerce.js";
 const socket = io('https://updatetik.onrender.com',{transports:["websocket"]}); // Adjust to your server
 // const socket = io('https://no.tiktoknummer.de',{transports:["websocket"]}); // Adjust to your server
 
-
 document.addEventListener('DOMContentLoaded', loadStoredComments);
 
 async function loadStoredComments() {
@@ -74,6 +73,8 @@ function displayComment(messageData) {
         <span><strong>${username}</strong>:<strong>${messageData.comment}<strong>:${messageData.comment}</span>
     `;
 
+
+    console.log(verifyInfo)
     verifyInfo.appendChild(commentDiv);
 
     // ✅ Ensure smooth scrolling when a new comment is added
@@ -83,6 +84,7 @@ function displayComment(messageData) {
 }
 
 async function handleMessageData(messageData, ordersArray) {
+    console.log(messageData)
     loadingText.textContent = "";
 
     if (!messageData.username || !messageData.comment) {
