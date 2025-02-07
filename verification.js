@@ -3,7 +3,6 @@ const loadingText = document.querySelector(".load");
 const clearButton = document.querySelector(".clearBtn");
 import { getAllOrders, verifyBidder } from "./wooCommerce.js";
 const socket = io('https://updatetik.onrender.com',{transports:["websocket"]}); // Adjust to your server
-// const socket = io('https://no.tiktoknummer.de',{transports:["websocket"]}); // Adjust to your server
 
 document.addEventListener('DOMContentLoaded', loadStoredComments);
 
@@ -42,7 +41,7 @@ async function loadStoredComments() {
             console.error("Error updating orders:", error);
         }
     }, 60000); 
-
+//switching off previous instances
     socket.off('chat-message');
 
     // ✅ Listen for new messages
@@ -112,7 +111,9 @@ async function handleMessageData(messageData, ordersArray) {
     }
 
     try {
-        messageData.isTiktokUsernamePresent = await checkTiktokUsernameInOrders(messageData, ordersArray);
+        const result= await checkTiktokUsernameInOrders(messageData, ordersArray);
+        messageData.isTiktokUsernamePresent = result.isPresent
+        messageData.orderNum=result.orderNumber
     } catch (error) {
         console.error("Error checking TikTok username in orders:", error);
     }
@@ -146,11 +147,52 @@ function extractNumber(comment) {
 }
 
 // Function to check if any order has the same TikTok username as messageData.username
+// async function checkTiktokUsernameInOrders(messageData, ordersArray) {
+//     const isPresent = ordersArray.some(order => {
+//         const lineItems = order.line_items;
+
+//         // Iterate through each item in line_items
+//         for (const item of lineItems) {
+//             const metaData = item.meta_data || [];
+
+//             // Find TikTok username in "Dein TikTok Username" key
+//             const tiktokMeta = metaData.find(meta => meta.key === "Dein TikTok Username");
+
+//             // Extract username from "_wapf_meta" if available
+//             let tiktokUsername = tiktokMeta ? tiktokMeta.value : null;
+
+//             if (!tiktokUsername) {
+//                 // If "Dein TikTok Username" is not found, check "_wapf_meta"
+//                 const wapfMeta = metaData.find(meta => meta.key === "_wapf_meta");
+//                 if (wapfMeta && wapfMeta.value) {
+//                     const wapfData = wapfMeta.value;
+//                     const wapfEntry = Object.values(wapfData).find(entry => entry.label === "Dein TikTok Username");
+//                     tiktokUsername = wapfEntry ? wapfEntry.value : null;
+//                 }
+//             }
+
+
+//             if (
+//                 (tiktokUsername?.toString().toLowerCase() || "") === (messageData.username?.toString().toLowerCase() || "") ||
+//                 (tiktokUsername?.toString().toLowerCase() || "") === (messageData.nickname?.toString().toLowerCase() || "")
+//             ) {
+//                 return true;
+//             }
+            
+            
+//         }
+
+//         // If no match found for this order, continue to the next order
+//         return false;
+//     });
+
+//     return isPresent; // Return whether the TikTok username is found
+// }
+
 async function checkTiktokUsernameInOrders(messageData, ordersArray) {
-    const isPresent = ordersArray.some(order => {
+    for (const order of ordersArray) {
         const lineItems = order.line_items;
 
-        // Iterate through each item in line_items
         for (const item of lineItems) {
             const metaData = item.meta_data || [];
 
@@ -170,23 +212,56 @@ async function checkTiktokUsernameInOrders(messageData, ordersArray) {
                 }
             }
 
-
+            // ✅ Check if the username or nickname matches
             if (
                 (tiktokUsername?.toString().toLowerCase() || "") === (messageData.username?.toString().toLowerCase() || "") ||
                 (tiktokUsername?.toString().toLowerCase() || "") === (messageData.nickname?.toString().toLowerCase() || "")
             ) {
-                return true;
+                return { isPresent: true, orderNumber: order.id }; // Return order number if found
             }
-            
-            
         }
+    }
 
-        // If no match found for this order, continue to the next order
-        return false;
-    });
-
-    return isPresent; // Return whether the TikTok username is found
+    return { isPresent: false, orderNumber: null }; // Return false if not found
 }
+
+
+async function checkTiktokUsernameInOrders(messageData, ordersArray) {
+    for (const order of ordersArray) {
+        const lineItems = order.line_items;
+
+        for (const item of lineItems) {
+            const metaData = item.meta_data || [];
+
+            // Find TikTok username in "Dein TikTok Username" key
+            const tiktokMeta = metaData.find(meta => meta.key === "Dein TikTok Username");
+
+            // Extract username from "_wapf_meta" if available
+            let tiktokUsername = tiktokMeta ? tiktokMeta.value : null;
+
+            if (!tiktokUsername) {
+                // If "Dein TikTok Username" is not found, check "_wapf_meta"
+                const wapfMeta = metaData.find(meta => meta.key === "_wapf_meta");
+                if (wapfMeta && wapfMeta.value) {
+                    const wapfData = wapfMeta.value;
+                    const wapfEntry = Object.values(wapfData).find(entry => entry.label === "Dein TikTok Username");
+                    tiktokUsername = wapfEntry ? wapfEntry.value : null;
+                }
+            }
+
+            // ✅ Check if the username or nickname matches
+            if (
+                (tiktokUsername?.toString().toLowerCase() || "") === (messageData.username?.toString().toLowerCase() || "") ||
+                (tiktokUsername?.toString().toLowerCase() || "") === (messageData.nickname?.toString().toLowerCase() || "")
+            ) {
+                return { isPresent: true, orderNumber: order.id }; // Return order number if found
+            }
+        }
+    }
+
+    return { isPresent: false, orderNumber: null }; // Return false if not found
+}
+
 
 clearButton.addEventListener("click", () => {
     // Remove the 'liveComments' key from localStorage
