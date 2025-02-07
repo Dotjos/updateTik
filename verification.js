@@ -71,7 +71,7 @@ function displayComment(messageData) {
     commentDiv.style.color = messageData.isVerified || messageData.isTiktokUsernamePresent ? "green" : "red";
 
     commentDiv.innerHTML = `
-        ${messageData.isVerified ? `<span>${messageData.orderNum}</span>` : ""} 
+        ${messageData.orderNum ? `<span>${messageData.orderNum}</span>` : ""} 
         <span><strong>${username}</strong>:<strong>${messageData.nickname}<strong>:${messageData.comment}</span>
     `;
 
