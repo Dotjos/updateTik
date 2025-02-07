@@ -2,7 +2,9 @@ const verifyInfo = document.querySelector(".verificationInfo");
 const loadingText = document.querySelector(".load");
 const clearButton = document.querySelector(".clearBtn");
 import { getAllOrders, verifyBidder } from "./wooCommerce.js";
-const socket = io('https://updatetik.onrender.com'); // Adjust to your server
+const socket = io('https://updatetik.onrender.com',{transports:["websocket"]}); // Adjust to your server
+// const socket = io('https://no.tiktoknummer.de',{transports:["websocket"]}); // Adjust to your server
+
 
 document.addEventListener('DOMContentLoaded', loadStoredComments);
 
@@ -79,53 +81,6 @@ function displayComment(messageData) {
         verifyInfo.scrollTop = verifyInfo.scrollHeight;
     }, 200);
 }
-
-// async function handleMessageData(messageData, ordersArray) {
-//     loadingText.textContent = "";
-
-//     if (!messageData.username || !messageData.comment) {
-//         console.warn("Malformed message data:", messageData);
-//         return;
-//     }
-
-//     messageData.username = messageData.username.toLowerCase();  // ✅ Convert username to lowercase
-//     messageData.nickname = messageData.nickname.toLowerCase();  // ✅ Convert nickname to lowercase
-//     const orderNum = Number(extractNumber(messageData.comment));
-//     messageData.orderNum = orderNum;
-//     messageData.isVerified = false;
-//     messageData.isTiktokUsernamePresent = false;
-
-//     if (orderNum && orderNum > 0) {
-//         try {
-//             messageData.isVerified = await verifyBidder(orderNum, messageData.username,messageData.nickname);
-//         } catch (error) {
-//             console.error(`Error verifying bidder (OrderNum: ${orderNum}, Username: ${messageData.username}):`, error);
-//             messageData.isVerified = false;
-//         }
-//     }
-
-//     // ✅ Append new messages to `localStorage` before displaying
-//     try {
-//         const storedMessages = JSON.parse(localStorage.getItem("liveComments")) || [];
-//         const messageKey = `${messageData.username.toLowerCase()}|${messageData.comment}`;
-
-//         if (!storedMessages.some(msg => `${msg.username.toLowerCase()}|${msg.comment}` === messageKey)) {
-//             storedMessages.push(messageData);
-//             localStorage.setItem("liveComments", JSON.stringify(storedMessages));
-//         }
-//     } catch (error) {
-//         console.error("Error updating localStorage:", error);
-//     }
-
-//     try {
-//         messageData.isTiktokUsernamePresent = await checkTiktokUsernameInOrders(messageData, ordersArray);
-//     } catch (error) {
-//         console.error("Error checking TikTok username in orders:", error);
-//     }
-
-//     displayComment(messageData);
-// }
-// Function to extract the order number from a comment
 
 async function handleMessageData(messageData, ordersArray) {
     loadingText.textContent = "";
