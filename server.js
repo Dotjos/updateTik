@@ -48,10 +48,8 @@ io.on('connection', (socket) => {
     console.log('Client connected');
 });
 
-// const port = process.env.PORT || 3000;
-// server.listen(port, () => {
-//     console.log(`Server listening on http://localhost:${port}`);
-// });
+server.keepAliveTimeout = 120000; // 120 seconds
+server.headersTimeout = 120000; // 120 seconds
 
 const port = process.env.PORT || 10000; // Use 10000 as the default port
 server.listen(port, '0.0.0.0', () => {
