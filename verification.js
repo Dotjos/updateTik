@@ -44,7 +44,7 @@ async function loadStoredComments() {
         }
     }, 60000); 
 //switching off previous instances
-    // socket.off('chat-message');
+    socket.off('chat-message');
 
     // ✅ Listen for new messages
     socket.on('chat-message', async (messageData) => {
