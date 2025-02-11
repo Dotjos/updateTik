@@ -2,7 +2,8 @@ const verifyInfo = document.querySelector(".verificationInfo");
 const loadingText = document.querySelector(".load");
 const clearButton = document.querySelector(".clearBtn");
 import { getAllOrders, verifyBidder } from "./wooCommerce.js";
-const socket = io('https://updatetik.onrender.com',{transports:["websocket"]}); // Adjust to your server
+
+const socket = io('https://updatetik-t9b6.onrender.com/',{transports:["websocket"]}); // Adjust to your server
 
 document.addEventListener('DOMContentLoaded', loadStoredComments);
 
