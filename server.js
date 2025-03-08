@@ -40,7 +40,7 @@ tiktokLiveConnection.on('chat', (data) => {
         comment: data.comment,
         nickname:data.nickname
     };
-    console.log(messageData)
+    // console.log(messageData)
     io.emit('chat-message', messageData); // Send message to all connected clients
 });
 
@@ -53,6 +53,6 @@ server.headersTimeout = 120000; // 120 seconds
 
 const port = process.env.PORT || 10000; // Use 10000 as the default port
 server.listen(port, '0.0.0.0', () => {
-    console.log(`Server listening on http://0.0.0.0:${port}`);
+    // console.log(`Server listening on http://0.0.0.0:${port}`);
 });
 

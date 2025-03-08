@@ -17,7 +17,7 @@ async function loadStoredComments() {
         nickname:msg.nickname.toLowerCase()
     }));
  
-    console.log(storedMessages)
+    // console.log(storedMessages)
 
     // ✅ Ensure unique messages are preserved
     const uniqueMessages = Array.from(
@@ -78,7 +78,7 @@ function displayComment(messageData) {
     `;
 
 
-    console.log(verifyInfo)
+    // console.log(verifyInfo)
     verifyInfo.appendChild(commentDiv);
 
     // ✅ Ensure smooth scrolling when a new comment is added
