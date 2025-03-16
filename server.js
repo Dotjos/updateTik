@@ -25,7 +25,7 @@ const io = new Server(server,{cors: CORS_OPTIONS});
     });
 
 // const tiktokUsername = "ac_grosshandel"
-const tiktokUsername = "my_autah"
+const tiktokUsername = "i_am_efootball_king"
 
 let tiktokLiveConnection=null
 
