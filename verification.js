@@ -46,22 +46,6 @@ async function loadStoredComments() {
             console.error("Error updating orders:", error);
         }
     }, 60000); 
-//switching off previous instances
-    // socket.off('chat-message');
-
-    // ✅ Listen for new messages
-    // socket.on('chat-message', async (messageData) => {
-    //     try {
-    //         // Convert username to lowercase for consistency
-    //         messageData.username = messageData.username.toLowerCase();
-    //         messageData.nickname = messageData.nickname.toLowerCase()
-
-    //         // console.log("📥 Received chat message from WebSocket:", messageData);
-    //         await handleMessageData(messageData, orders);
-    //     } catch (error) {
-    //         console.error("Error handling message data:", error);
-    //     }
-    // });
 }
 
 // ✅ Function to initialize WebSocket only when button is clicked
@@ -73,6 +57,7 @@ function initializeSocket() {
             try {
                 messageData.username = messageData.username.toLowerCase();
                 messageData.nickname = messageData.nickname.toLowerCase();
+                socket.emit("start-tiktok");
                 await handleMessageData(messageData);
             } catch (error) {
                 console.error("Error handling message data:", error);
@@ -129,7 +114,7 @@ async function handleMessageData(messageData, ordersArray) {
         console.error("Error updating localStorage:", error);
     }
 
-
+    console.log(messageData)
     displayComment(messageData);
 }
 
