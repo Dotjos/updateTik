@@ -35,13 +35,17 @@ const startTikTokLive = async () => {
         console.log("TikTok Live connection already active.");
         return;
     }
-
     tiktokLiveConnection = new WebcastPushConnection(tiktokUsername);
 
     try {
-        const state = await tiktokLiveConnection.connect();
-        console.log(`Connected to roomId ${state.roomId}`);
+        // const state = await tiktokLiveConnection.connect();
+        // console.log(`Connected to roomId ${state.roomId}`);
 
+        tiktokLiveConnection.connect()
+        .then(state => console.log(`Connected to roomId ${state.roomId}`))
+        .catch(err => console.error('Failed to connect', err));
+
+        
         tiktokLiveConnection.on('chat', (data) => {
             io.emit('chat-message', {
                 username: data.uniqueId,
