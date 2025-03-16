@@ -1,11 +1,34 @@
 const verifyInfo = document.querySelector(".verificationInfo");
 const loadingText = document.querySelector(".load");
 const clearButton = document.querySelector(".clearBtn");
+const connectBtn = document.querySelector(".connectBtn");
+
 import { getAllOrders, verifyBidder } from "./wooCommerce.js";
 
-const socket = io('https://updatetik-t9b6.onrender.com/',{transports:["websocket"]}); // Adjust to your server
+let socket = null;
 
-document.addEventListener('DOMContentLoaded', loadStoredComments);
+document.addEventListener('DOMContentLoaded', () => {
+    loadStoredComments(); // ✅ Only load stored comments (No WebSocket connection)
+});
+
+// ✅ Function to initialize WebSocket only when button is clicked
+function initializeSocket() {
+    if (!socket) {
+        socket = io('https://updatetik-t9b6.onrender.com/', { transports: ["websocket"] });
+
+        socket.on('chat-message', async (messageData) => {
+            try {
+                messageData.username = messageData.username.toLowerCase();
+                messageData.nickname = messageData.nickname.toLowerCase();
+                await handleMessageData(messageData);
+            } catch (error) {
+                console.error("Error handling message data:", error);
+            }
+        });
+
+        console.log("✅ WebSocket connection started.");
+    }
+}
 
 async function loadStoredComments() {
     let storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
@@ -14,11 +37,9 @@ async function loadStoredComments() {
     storedMessages = storedMessages.map(msg => ({
         ...msg,
         username: msg.username.toLowerCase(),
-        nickname:msg.nickname.toLowerCase()
+        nickname: msg.nickname.toLowerCase()
     }));
  
-    // console.log(storedMessages)
-
     // ✅ Ensure unique messages are preserved
     const uniqueMessages = Array.from(
         new Map(storedMessages.map(msg => [`${msg.username}|${msg.comment}`, msg])).values()
@@ -48,43 +69,18 @@ async function loadStoredComments() {
     socket.off('chat-message');
 
     // ✅ Listen for new messages
-    socket.on('chat-message', async (messageData) => {
-        try {
-            // Convert username to lowercase for consistency
-            messageData.username = messageData.username.toLowerCase();
-            messageData.nickname = messageData.nickname.toLowerCase()
+    // socket.on('chat-message', async (messageData) => {
+    //     try {
+    //         // Convert username to lowercase for consistency
+    //         messageData.username = messageData.username.toLowerCase();
+    //         messageData.nickname = messageData.nickname.toLowerCase()
 
-            console.log("📥 Received chat message from WebSocket:", messageData);
-            await handleMessageData(messageData, orders);
-        } catch (error) {
-            console.error("Error handling message data:", error);
-        }
-    });
-}
-// Function to display a comment dynamically on the page
-function displayComment(messageData) {
-    const commentDiv = document.createElement("div");
-    commentDiv.classList.add("comment");
-
-    // ✅ Convert username to lowercase for consistency
-    const username = messageData.username.toLowerCase();
-
-    // ✅ Set color based on verification status
-    commentDiv.style.color = messageData.isVerified || messageData.isTiktokUsernamePresent ? "green" : "red";
-
-    commentDiv.innerHTML = `
-        ${messageData.orderNum ? `<span>${messageData.orderNum}</span>` : ""} 
-        <span><strong>${username}</strong>:<strong>${messageData.nickname}<strong>:${messageData.comment}</span>
-    `;
-
-
-    // console.log(verifyInfo)
-    verifyInfo.appendChild(commentDiv);
-
-    // ✅ Ensure smooth scrolling when a new comment is added
-    setTimeout(() => {
-        verifyInfo.scrollTop = verifyInfo.scrollHeight;
-    }, 200);
+    //         // console.log("📥 Received chat message from WebSocket:", messageData);
+    //         await handleMessageData(messageData, orders);
+    //     } catch (error) {
+    //         console.error("Error handling message data:", error);
+    //     }
+    // });
 }
 
 async function handleMessageData(messageData, ordersArray) {
@@ -137,6 +133,34 @@ async function handleMessageData(messageData, ordersArray) {
     displayComment(messageData);
 }
 
+
+// Function to display a comment dynamically on the page
+function displayComment(messageData) {
+    const commentDiv = document.createElement("div");
+    commentDiv.classList.add("comment");
+
+    // ✅ Convert username to lowercase for consistency
+    const username = messageData.username.toLowerCase();
+
+    // ✅ Set color based on verification status
+    commentDiv.style.color = messageData.isVerified || messageData.isTiktokUsernamePresent ? "green" : "red";
+
+    commentDiv.innerHTML = `
+        ${messageData.orderNum ? `<span>${messageData.orderNum}</span>` : ""} 
+        <span><strong>${username}</strong>:<strong>${messageData.nickname}</strong>:${messageData.comment}</span>
+    `;
+
+
+    // console.log(verifyInfo)
+    verifyInfo.appendChild(commentDiv);
+
+    // ✅ Ensure smooth scrolling when a new comment is added
+    setTimeout(() => {
+        verifyInfo.scrollTop = verifyInfo.scrollHeight;
+    }, 200);
+}
+
+
 function extractNumber(comment) {
     const numberMatch = comment.match(/^\d+/);
     let orderNum;
@@ -148,7 +172,6 @@ function extractNumber(comment) {
     }
 }
 // Function to check if any order has the same TikTok username as messageData.username
-
 async function checkTiktokUsernameInOrders(messageData, ordersArray) {
     for (const order of ordersArray) {
         const lineItems = order.line_items;
@@ -184,6 +207,11 @@ async function checkTiktokUsernameInOrders(messageData, ordersArray) {
 
     return { isPresent: false, orderNumber: null }; // Return false if not found
 }
+
+// ✅ Start WebSocket only when button is clicked
+connectBtn.addEventListener("click", () => {
+    initializeSocket();
+});
 
 clearButton.addEventListener("click", () => {
     // Remove the 'liveComments' key from localStorage
