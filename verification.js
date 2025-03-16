@@ -11,25 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadStoredComments(); // ✅ Only load stored comments (No WebSocket connection)
 });
 
-// ✅ Function to initialize WebSocket only when button is clicked
-function initializeSocket() {
-    if (!socket) {
-        socket = io('https://updatetik-t9b6.onrender.com/', { transports: ["websocket"] });
-
-        socket.on('chat-message', async (messageData) => {
-            try {
-                messageData.username = messageData.username.toLowerCase();
-                messageData.nickname = messageData.nickname.toLowerCase();
-                await handleMessageData(messageData);
-            } catch (error) {
-                console.error("Error handling message data:", error);
-            }
-        });
-
-        console.log("✅ WebSocket connection started.");
-    }
-}
-
 async function loadStoredComments() {
     let storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
 
@@ -66,7 +47,7 @@ async function loadStoredComments() {
         }
     }, 60000); 
 //switching off previous instances
-    socket.off('chat-message');
+    // socket.off('chat-message');
 
     // ✅ Listen for new messages
     // socket.on('chat-message', async (messageData) => {
@@ -81,6 +62,25 @@ async function loadStoredComments() {
     //         console.error("Error handling message data:", error);
     //     }
     // });
+}
+
+// ✅ Function to initialize WebSocket only when button is clicked
+function initializeSocket() {
+    if (!socket) {
+        socket = io('https://updatetik-t9b6.onrender.com/', { transports: ["websocket"] });
+
+        socket.on('chat-message', async (messageData) => {
+            try {
+                messageData.username = messageData.username.toLowerCase();
+                messageData.nickname = messageData.nickname.toLowerCase();
+                await handleMessageData(messageData);
+            } catch (error) {
+                console.error("Error handling message data:", error);
+            }
+        });
+
+        console.log("✅ WebSocket connection started.");
+    }
 }
 
 async function handleMessageData(messageData, ordersArray) {
