@@ -192,6 +192,17 @@ async function checkTiktokUsernameInOrders(messageData, ordersArray) {
 connectBtn.addEventListener("click", () => {
     initializeSocket();
 });
+ 
+
+function disconnectSocket() {
+    if (socket) {
+        socket.emit("stop-tiktok"); // Notify server if needed
+        socket.disconnect();
+        socket = null;
+        console.log("✅ WebSocket disconnected.");
+    }
+}
+
 
 clearButton.addEventListener("click", () => {
     // Remove the 'liveComments' key from localStorage
