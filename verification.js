@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
 async function fetchOrdersPeriodically() {
     try {
         ordersCache = await getAllOrders();
-        console.log(ordersCache)
     } catch (error) {
         console.error("Error updating orders:", error);
     }
@@ -60,15 +59,13 @@ function initializeSocket() {
     });
 
     socket.emit("start-tiktok"); // ✅ Start TikTok connection only ONCE
-    console.log("✅ WebSocket connection started.");
 
     // ✅ Disable button to prevent multiple connections
     connectBtn.disabled = true;
 }
 
 async function handleMessageData(messageData, ordersArray=ordersCache) {
-    console.log(messageData)
-    loadingText.textContent = "";
+        loadingText.textContent = "";
 
 
     if (!messageData.username || !messageData.comment) {
@@ -113,7 +110,6 @@ async function handleMessageData(messageData, ordersArray=ordersCache) {
         console.error("Error updating localStorage:", error);
     }
 
-    console.log(messageData)
     displayComment(messageData);
 }
 // Function to display a comment dynamically on the page
