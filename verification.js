@@ -2,14 +2,25 @@ const verifyInfo = document.querySelector(".verificationInfo");
 const loadingText = document.querySelector(".load");
 const clearButton = document.querySelector(".clearBtn");
 const connectBtn = document.querySelector(".connectBtn");
-
-import { getAllOrders, verifyBidder } from "./wooCommerce.js";
-
+let ordersCache = [];
 let socket = null;
+import { getAllOrders, verifyBidder } from "./wooCommerce.js";
+// ✅ Load stored comments on page load
 
 document.addEventListener('DOMContentLoaded', () => {
     loadStoredComments(); // ✅ Only load stored comments (No WebSocket connection)
+    fetchOrdersPeriodically();
+    setInterval(fetchOrdersPeriodically, 60000);
 });
+
+async function fetchOrdersPeriodically() {
+    try {
+        ordersCache = await getAllOrders();
+        console.log(ordersCache)
+    } catch (error) {
+        console.error("Error updating orders:", error);
+    }
+}
 
 async function loadStoredComments() {
     let storedMessages = JSON.parse(localStorage.getItem('liveComments')) || [];
@@ -28,49 +39,37 @@ async function loadStoredComments() {
 
     // ✅ Display stored comments on page load
     uniqueMessages.forEach(displayComment);
-
-    let orders = [];
-
-    // ✅ Fetch initial orders
-    try {
-        orders = await getAllOrders(); 
-    } catch (error) {
-        console.error("Error fetching orders:", error);
-    }
-
-    // ✅ Auto-refresh orders every 60 seconds
-    setInterval(async () => {
-        try {
-            orders = await getAllOrders();
-        } catch (error) {
-            console.error("Error updating orders:", error);
-        }
-    }, 60000); 
 }
-
 // ✅ Function to initialize WebSocket only when button is clicked
 function initializeSocket() {
-    if (!socket) {
-        socket = io('https://updatetik-t9b6.onrender.com/', { transports: ["websocket"] });
-
-        socket.on('chat-message', async (messageData) => {
-            try {
-                messageData.username = messageData.username.toLowerCase();
-                messageData.nickname = messageData.nickname.toLowerCase();
-                socket.emit("start-tiktok");
-                await handleMessageData(messageData);
-            } catch (error) {
-                console.error("Error handling message data:", error);
-            }
-        });
-
-        console.log("✅ WebSocket connection started.");
+    if (socket) {
+        console.log("⚠️ WebSocket already initialized.");
+        return; // Prevent multiple WebSocket connections
     }
+
+    socket = io('https://updatetik-t9b6.onrender.com/', { transports: ["websocket"] });
+
+    socket.on('chat-message', async (messageData) => {
+        try {
+            messageData.username = messageData.username.toLowerCase();
+            messageData.nickname = messageData.nickname.toLowerCase();
+            await handleMessageData(messageData);
+        } catch (error) {
+            console.error("Error handling message data:", error);
+        }
+    });
+
+    socket.emit("start-tiktok"); // ✅ Start TikTok connection only ONCE
+    console.log("✅ WebSocket connection started.");
+
+    // ✅ Disable button to prevent multiple connections
+    connectBtn.disabled = true;
 }
 
-async function handleMessageData(messageData, ordersArray) {
+async function handleMessageData(messageData, ordersArray=ordersCache) {
     console.log(messageData)
     loadingText.textContent = "";
+
 
     if (!messageData.username || !messageData.comment) {
         console.warn("Malformed message data:", messageData);
@@ -117,8 +116,6 @@ async function handleMessageData(messageData, ordersArray) {
     console.log(messageData)
     displayComment(messageData);
 }
-
-
 // Function to display a comment dynamically on the page
 function displayComment(messageData) {
     const commentDiv = document.createElement("div");
@@ -144,7 +141,6 @@ function displayComment(messageData) {
         verifyInfo.scrollTop = verifyInfo.scrollHeight;
     }, 200);
 }
-
 
 function extractNumber(comment) {
     const numberMatch = comment.match(/^\d+/);
@@ -192,7 +188,6 @@ async function checkTiktokUsernameInOrders(messageData, ordersArray) {
 
     return { isPresent: false, orderNumber: null }; // Return false if not found
 }
-
 // ✅ Start WebSocket only when button is clicked
 connectBtn.addEventListener("click", () => {
     initializeSocket();

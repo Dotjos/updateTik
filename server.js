@@ -121,9 +121,6 @@
 
 
 
-
-
-
 const express = require('express');
 const { WebcastPushConnection } = require('tiktok-live-connector');
 const http = require('http');
@@ -152,7 +149,7 @@ app.get('/', (req, res) => {
 });
 
 // TikTok username
-const tiktokUsername = "i_am_efootball_king";
+const tiktokUsername = "attitude_mistress";
 
 let tiktokLiveConnection = null;
 let reconnectTimeout = null; // Store reconnect timeout
