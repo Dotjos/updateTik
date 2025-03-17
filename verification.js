@@ -199,9 +199,12 @@ function disconnectSocket() {
     }
 }
 
-
 clearButton.addEventListener("click", () => {
     // Remove the 'liveComments' key from localStorage
     localStorage.removeItem('liveComments');
     verifyInfo.textContent = "";
 });
+
+
+
+

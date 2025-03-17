@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 });
 
 // TikTok username
-const tiktokUsername = "attitude_mistress";
+const tiktokUsername = "ac_grosshandel";
 
 let tiktokLiveConnection = null;
 let reconnectTimeout = null; // Store reconnect timeout
@@ -136,6 +136,29 @@ const port = process.env.PORT || 10000;
 server.listen(port, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${port}`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
